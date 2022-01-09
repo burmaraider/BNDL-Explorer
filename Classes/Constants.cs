@@ -15,14 +15,16 @@ namespace BNDL_Explorer.Classes
         {
             BNDL = 0,
             LVBNDL = 1,
-            TEX,
+            TEX = 2,
+            SND
         };
 
         public static Dictionary<SupportedExtensions, string> extensions = new Dictionary<SupportedExtensions, string>
         { 
             { SupportedExtensions.BNDL, ".bndl" }, 
             { SupportedExtensions.LVBNDL, ".lvbndl" },
-            { SupportedExtensions.TEX, ".tex" }
+            { SupportedExtensions.TEX, ".tex" },
+            { SupportedExtensions.SND, ".snd" }
         };
         public static float appVersion = 0.04f;
         public static string openDialogBNDLFilter = "FEAR 2 bndl|*.bndl|FEAR 2 lvbndl|*.lvbndl";

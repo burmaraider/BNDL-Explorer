@@ -9,6 +9,7 @@ using BNDL_Explorer.Classes;
 
 namespace BNDL_Explorer
 {
+    using LokiSoundExplorer;
     public partial class MainForm : Form
     {
         private AskForm askForm;
@@ -112,15 +113,21 @@ namespace BNDL_Explorer
 
                     TextureInfoVisibility(true);
                 }
+                else if(item.extension == Constants.extensions[Constants.SupportedExtensions.SND])
+                {
+                    openSound.Enabled = true;
+                }
                 else
                 {
                     TextureInfoVisibility(false);
+                    openSound.Enabled = false;
                 }
             }
             else
             {
                 FileInfoVisibility(false);
                 TextureInfoVisibility(false);
+                openSound.Enabled = false;
             }
 
         }
@@ -352,6 +359,21 @@ namespace BNDL_Explorer
             TreeViewMain.Nodes.Clear();
             FileInfoVisibility(false);
             TextureInfoVisibility(false);
+        }
+
+        private void openSound_Click(object sender, EventArgs e)
+        {
+            if (TreeViewMain.SelectedNode != null)
+            {
+                FileData item = (FileData)TreeViewMain.SelectedNode.Tag;
+
+                byte[] buffer = BNDLParser.ExtractFileToArray(item, 0);
+                Form1 loki = new Form1(buffer);
+
+                loki.ShowDialog();
+                buffer = null;
+                GC.Collect();
+            }
         }
     }
 }
