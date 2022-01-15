@@ -38,11 +38,13 @@
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bundleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractAllFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxFileInfo = new System.Windows.Forms.GroupBox();
+            this.openSound = new System.Windows.Forms.Button();
             this.buttonExtractFile = new System.Windows.Forms.Button();
             this.textBoxFileSkipped = new System.Windows.Forms.TextBox();
             this.labelFileSkipped = new System.Windows.Forms.Label();
@@ -63,7 +65,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.openSound = new System.Windows.Forms.Button();
+            this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.groupBoxFileInfo.SuspendLayout();
             this.groupBoxTextureInfo.SuspendLayout();
@@ -112,7 +114,9 @@
             this.openToolStripMenuItem,
             this.closeToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.exitToolStripMenuItem});
+            this.exitToolStripMenuItem,
+            this.asdToolStripMenuItem,
+            this.windowToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -142,6 +146,13 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
+            // 
+            // asdToolStripMenuItem
+            // 
+            this.asdToolStripMenuItem.Name = "asdToolStripMenuItem";
+            this.asdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asdToolStripMenuItem.Text = "asd";
+            this.asdToolStripMenuItem.Click += new System.EventHandler(this.asdToolStripMenuItem_Click);
             // 
             // bundleToolStripMenuItem
             // 
@@ -194,6 +205,17 @@
             this.groupBoxFileInfo.TabIndex = 2;
             this.groupBoxFileInfo.TabStop = false;
             this.groupBoxFileInfo.Text = "File Info";
+            // 
+            // openSound
+            // 
+            this.openSound.Enabled = false;
+            this.openSound.Location = new System.Drawing.Point(9, 166);
+            this.openSound.Name = "openSound";
+            this.openSound.Size = new System.Drawing.Size(121, 27);
+            this.openSound.TabIndex = 5;
+            this.openSound.Text = "Open Sound";
+            this.openSound.UseVisualStyleBackColor = true;
+            this.openSound.Click += new System.EventHandler(this.openSound_Click);
             // 
             // buttonExtractFile
             // 
@@ -348,16 +370,12 @@
             // 
             this.colorDialogDDS.Color = System.Drawing.Color.LightGray;
             // 
-            // openSound
+            // windowToolStripMenuItem
             // 
-            this.openSound.Enabled = false;
-            this.openSound.Location = new System.Drawing.Point(9, 166);
-            this.openSound.Name = "openSound";
-            this.openSound.Size = new System.Drawing.Size(121, 27);
-            this.openSound.TabIndex = 5;
-            this.openSound.Text = "Open Sound";
-            this.openSound.UseVisualStyleBackColor = true;
-            this.openSound.Click += new System.EventHandler(this.openSound_Click);
+            this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
+            this.windowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.windowToolStripMenuItem.Text = "Window";
+            this.windowToolStripMenuItem.Click += new System.EventHandler(this.windowToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -425,6 +443,8 @@
         private System.Windows.Forms.ToolStripMenuItem extractAllFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.Button openSound;
+        private System.Windows.Forms.ToolStripMenuItem asdToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
     }
 }
 

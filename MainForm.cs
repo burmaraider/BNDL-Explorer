@@ -6,10 +6,13 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using BNDL_Explorer.Classes;
+using BNDL_Explorer.Viewer;
 
 namespace BNDL_Explorer
 {
     using LokiSoundExplorer;
+    using OpenTK.Graphics;
+
     public partial class MainForm : Form
     {
         private AskForm askForm;
@@ -374,6 +377,22 @@ namespace BNDL_Explorer
                 buffer = null;
                 GC.Collect();
             }
+        }
+
+        private void asdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void windowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (Renderer game = new Renderer(1280, 720, GraphicsMode.Default, "BNDLViewer 3D")) //"LearnOpenTK"))
+            {
+                game.Run(100.0);
+            }
+
+
+
         }
     }
 }
