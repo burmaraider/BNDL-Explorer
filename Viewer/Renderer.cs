@@ -114,13 +114,9 @@ namespace BNDL_Explorer.Viewer
 
         private void DebugInfo()
         {
-
             _textRenderer.DrawString(String.Format("Position: {0:0.000} , {1:0.000} , {2:0.000}", _camera.Position.X, _camera.Position.Y, _camera.Position.Z), 2f, 0f);
             _textRenderer.DrawString(String.Format("Camera FOV: {0:0}", _camera.Fov), 2f, 32f);
             _textRenderer.DrawString(String.Format("Camera Aspect Ratio: {0:0.00}", _camera.AspectRatio), 2f, 64f);
-
-            _textRenderer.DrawString(String.Format("FPS: {0:0}", _fps), Size.Width - 100f , 0f);
-
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
