@@ -11,7 +11,7 @@ namespace BNDL_Explorer.Viewer
 {
     public class MeshObject
     {
-        private Camera2 _camera;
+        private Camera _camera;
 
         private float[] _vboData;
         private int _vaoModel;
@@ -23,7 +23,7 @@ namespace BNDL_Explorer.Viewer
 
         Shader _lightingShader;
 
-        public MeshObject(float[] vboData, string texture0, string texture1, string texture2, ref Camera2 cam)
+        public MeshObject(float[] vboData, string texture0, string texture1, string texture2, ref Camera cam)
         {
             _camera = cam;
 

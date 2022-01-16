@@ -191,7 +191,7 @@ namespace BNDL_Explorer.Viewer
         }
 
         /// <summary>
-        /// Set a uniform Vector3 on this shader.
+        /// Set a uniform Vector2 on this shader.
         /// </summary>
         /// <param name="name">The name of the uniform</param>
         /// <param name="data">The data to set</param>
