@@ -70,6 +70,12 @@ namespace BNDL_Explorer.Viewer
                 if (Keyboard.GetState().IsKeyDown(Key.KeypadMinus))
                     r.GetCamera.Fov -= 0.1f * (float)e.Time;
 
+                if (Keyboard.GetState().IsKeyDown(Key.Z))
+                    r._angleallowed = !r._angleallowed;
+
+                if (Keyboard.GetState().IsKeyDown(Key.X))
+                    r._light.Position = r.GetCamera.Position;
+
                 if (_firstMove) // This bool variable is initially set to true.
                 {
                     _lastPos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
@@ -84,6 +90,26 @@ namespace BNDL_Explorer.Viewer
                     r.GetCamera.Yaw += deltaX * _mouseSensitivity;
                     r.GetCamera.Pitch -= deltaY * _mouseSensitivity;
                 }
+            }
+            else
+            {
+                r.CursorGrabbed = false;
+                r.CursorVisible = true;
+            }
+
+            if (Mouse.GetState().IsButtonDown(MouseButton.Middle)) //Enable Viewport Interaction
+            {
+                r.CursorGrabbed = true;
+                r.CursorVisible = false;
+            
+                var deltaX = Mouse.GetState().X - _lastPos.X;
+                var deltaY = Mouse.GetState().Y - _lastPos.Y;
+                _lastPos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+            
+                r._xAngle += deltaX * _mouseSensitivity;
+                r._yAngle -= deltaY * _mouseSensitivity;
+            
+            
             }
             else
             {

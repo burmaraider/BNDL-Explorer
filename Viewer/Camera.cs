@@ -17,6 +17,8 @@ namespace BNDL_Explorer.Viewer
 
         private float _fov = MathHelper.PiOver2;
 
+        
+
         public Camera(Vector3 position, float aspectRatio)
         {
             Position = position;
@@ -25,6 +27,7 @@ namespace BNDL_Explorer.Viewer
 
         public Vector3 Position { get; set; }
 
+        public Matrix4 LookAtMatrix { get { return Matrix4.LookAt(Position, -Vector3.UnitZ, Vector3.UnitY); } }
 
         public float AspectRatio {  get; set; }
 
