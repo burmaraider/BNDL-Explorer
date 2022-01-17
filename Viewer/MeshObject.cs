@@ -87,7 +87,6 @@ namespace BNDL_Explorer.Viewer
             _lightingShader.SetMatrix4("model", Matrix4.Identity * newPos);
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-            //_lightingShader.SetMatrix3("MV3x3", new Matrix3(Matrix4.Identity * newPos));
 
             _lightingShader.SetVector3("viewPos", _camera.Position);
 
