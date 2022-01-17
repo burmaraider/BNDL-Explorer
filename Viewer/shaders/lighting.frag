@@ -17,36 +17,41 @@ uniform Light light;
 uniform Material material;
 uniform vec3 viewPos;
 
+in VS_OUT 
+{
+    vec3 Normal;
+    vec3 FragPos;
+    vec2 TexCoords;
+    vec3 LightDirTangent;
+    vec3 EyeDirTangent;
+    mat3 TBN;
+} fs_in;
+
 out vec4 FragColor;
-
-in vec3 Normal;
-in vec3 FragPos;
-
-in vec2 TexCoords;
 
 void main()
 {
-    // ambient
-    vec3 ambient = light.ambient * vec3(texture(material.tDiffuseMap, TexCoords));
+    // Ambient
+    vec3 ambient = light.ambient * vec3(texture(material.tDiffuseMap, fs_in.TexCoords));
 
     // Diffuse 
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(light.position - FragPos);
+    vec3 norm = normalize(fs_in.Normal);
+    vec3 lightDir = fs_in.TBN * normalize(light.position - fs_in.FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diff * vec3(texture(material.tDiffuseMap, TexCoords));
+    vec3 diffuse = light.diffuse * diff * vec3(texture(material.tDiffuseMap, fs_in.TexCoords));
+
+    //Normal map
+    vec3 normal = texture(material.tNormalMap, fs_in.TexCoords).rgb;
+    normal = normal * 2.0 - 1.0;   
 
     // Specular
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.fMaxtSpecularMapPower);
-    vec3 tSpecularMap = light.specular * spec * vec3(texture(material.tSpecularMap, TexCoords));
+    vec3 viewDir = fs_in.TBN * normalize(viewPos - fs_in.FragPos);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    vec3 halfwayDir = normalize(viewDir + reflectDir);  
+    float spec = pow(max(dot(halfwayDir, viewDir), 0.0), material.fMaxtSpecularMapPower);
+    vec3 specular = light.specular * spec * vec3(texture(material.tSpecularMap, fs_in.TexCoords));
 
-    //Normal - todo
-    vec3 normalMap = vec3(texture(material.tNormalMap, TexCoords));
-
-    normalMap *= 0.001;
-
-
-    vec3 result = ambient + diffuse + tSpecularMap + normalMap;
+    //Final output
+    vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);
 }

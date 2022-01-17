@@ -298,7 +298,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Sound\LokiSound.cs" />
-    <Compile Include="Viewer\Camera2.cs" />
+    <Compile Include="Viewer\Camera.cs" />
+    <Compile Include="Viewer\Input.cs" />
+    <Compile Include="Viewer\Light.cs" />
     <Compile Include="Viewer\MeshObject.cs" />
     <Compile Include="Viewer\OBJImporter.cs" />
     <Compile Include="Viewer\Shader.cs" />
@@ -315,6 +317,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Viewer\Textures\Grid_S.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Viewer\Textures\gund.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Viewer\Textures\gunn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Viewer\Textures\guns.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="AskForm.resx">
@@ -351,7 +362,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Viewer\Camera.cs" />
     <None Include="Viewer\shaders\lighting.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

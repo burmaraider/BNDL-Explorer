@@ -11,7 +11,11 @@ namespace BNDL_Explorer.Viewer
 {
     public class MeshObject
     {
-        private Camera2 _camera;
+        private Camera _camera;
+
+        public String _name;
+
+        public Vector3 _position;
 
         private float[] _vboData;
         private int _vaoModel;
@@ -23,7 +27,7 @@ namespace BNDL_Explorer.Viewer
 
         Shader _lightingShader;
 
-        public MeshObject(float[] vboData, string texture0, string texture1, string texture2, ref Camera2 cam)
+        public MeshObject(float[] vboData, string texture0, string texture1, string texture2, ref Camera cam)
         {
             _camera = cam;
 
@@ -51,19 +55,27 @@ namespace BNDL_Explorer.Viewer
 
                 var position = _lightingShader.GetAttribLocation("aPos");
                 GL.EnableVertexAttribArray(position);
-                GL.VertexAttribPointer(position, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+                GL.VertexAttribPointer(position, 3, VertexAttribPointerType.Float, false, 14 * sizeof(float), 0);
 
                 var normals = _lightingShader.GetAttribLocation("aNormal");
                 GL.EnableVertexAttribArray(normals);
-                GL.VertexAttribPointer(normals, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+                GL.VertexAttribPointer(normals, 3, VertexAttribPointerType.Float, false, 14 * sizeof(float), 3 * sizeof(float));
 
                 var texCoords = _lightingShader.GetAttribLocation("aTexCoords");
                 GL.EnableVertexAttribArray(texCoords);
-                GL.VertexAttribPointer(texCoords, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+                GL.VertexAttribPointer(texCoords, 2, VertexAttribPointerType.Float, false, 14 * sizeof(float), 6 * sizeof(float));
+
+                var tangents = _lightingShader.GetAttribLocation("aTangents");
+                GL.EnableVertexAttribArray(tangents);
+                GL.VertexAttribPointer(tangents, 3, VertexAttribPointerType.Float, false, 14 * sizeof(float), 8 * sizeof(float));
+
+                var bitangents = _lightingShader.GetAttribLocation("aBiTangents");
+                GL.EnableVertexAttribArray(bitangents);
+                GL.VertexAttribPointer(bitangents, 3, VertexAttribPointerType.Float, false, 14 * sizeof(float), 11 * sizeof(float));
             }
         }
 
-        public void RenderObject(Matrix4 newPos, ref Vector3 lp)
+        public void RenderObject(Matrix4 newPos, ref Light light)
         {
             GL.BindVertexArray(_vaoModel);
 
@@ -75,21 +87,42 @@ namespace BNDL_Explorer.Viewer
             _lightingShader.SetMatrix4("model", Matrix4.Identity * newPos);
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            //_lightingShader.SetMatrix3("MV3x3", new Matrix3(Matrix4.Identity * newPos));
 
             _lightingShader.SetVector3("viewPos", _camera.Position);
 
             _lightingShader.SetInt("material.tDiffuseMap", 0);
             _lightingShader.SetInt("material.tSpecularMap", 1);
             _lightingShader.SetInt("material.tNormalMap", 2);
-            _lightingShader.SetVector3("material.tSpecularMap", new Vector3(0.5f, 0.5f, 0.5f));
-            _lightingShader.SetFloat("material.fMaxtSpecularMapPower", 5.0f);
+            _lightingShader.SetVector3("material.tSpecularMap", new Vector3(0.5f,0.5f,0.5f));
+            _lightingShader.SetFloat("material.fMaxtSpecularMapPower", 15f);
 
-            _lightingShader.SetVector3("light.position", lp);
-            _lightingShader.SetVector3("light.ambient", new Vector3(0.2f));
-            _lightingShader.SetVector3("light.diffuse", new Vector3(0.5f));
-            _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
+            _lightingShader.SetVector3("light.position", light.Position);
+            _lightingShader.SetVector3("light.ambient", light.AmbientColor);
+            _lightingShader.SetVector3("light.diffuse", light.Color);
+            _lightingShader.SetVector3("light.specular", light.SpecularColor);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, _vboData.Length / 3);
+        }
+
+        public double? IntersectsRay(Vector3 rayDirection, Vector3 rayOrigin)
+        {
+            var radius = 1.5f;
+            var difference = _position - rayDirection;
+            var differenceLengthSquared = difference.LengthSquared;
+            var sphereRadiusSquared = radius * radius;
+            if (differenceLengthSquared < sphereRadiusSquared)
+            {
+                return 0d;
+            }
+            var distanceAlongRay = Vector3.Dot(rayDirection, difference);
+            if (distanceAlongRay < 0)
+            {
+                return null;
+            }
+            var dist = sphereRadiusSquared + distanceAlongRay * distanceAlongRay - differenceLengthSquared;
+            var result = (dist < 0) ? null : distanceAlongRay - (double?)Math.Sqrt(dist);
+            return result;
         }
     }
 }
