@@ -1,9 +1,8 @@
-﻿using BNDL_Explorer.Classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace BNDL_Explorer
+namespace BNDL_Explorer.Classes
 {
     class BNDLFile
     {

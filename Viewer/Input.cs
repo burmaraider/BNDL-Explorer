@@ -10,9 +10,12 @@ namespace BNDL_Explorer.Viewer
 {
     public class Input
     {
+        
         private readonly Renderer r;
         private bool _firstMove = true;
         private Vector2 _lastPos;
+        private bool canAddLight = false;
+        private bool canSelectLight;
 
         public Input(Renderer gameWindow)
         {
@@ -65,16 +68,64 @@ namespace BNDL_Explorer.Viewer
                     r.GetCamera.Move(0f, 0f, -0.01f * (float)e.Time);
 
                 if (Keyboard.GetState().IsKeyDown(Key.KeypadPlus))
-                    r.GetCamera.Fov += 0.1f * (float)e.Time;
+                {
+                    r._light[r.selectedLight].Radius += 0.25f;
+                }
 
                 if (Keyboard.GetState().IsKeyDown(Key.KeypadMinus))
-                    r.GetCamera.Fov -= 0.1f * (float)e.Time;
+                {
+                    r._light[r.selectedLight].Radius -= 0.25f;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Key.Plus))
+                {
+                    r._light[r.selectedLight].Intensity += 0.25f;
+                }
+
+
+                if (Keyboard.GetState().IsKeyDown(Key.L))
+                {
+                    if (canAddLight)
+                    {
+                        canAddLight = false;
+                        Random rand = new Random();
+                        Vector3 randomColor = new Vector3(rand.Next(1, 255) / 255f, rand.Next(1, 255) / 255f, rand.Next(1, 255) / 255f);
+                        PointLight l = new PointLight
+                        {
+                            Position = r.GetCamera.Position,
+                            Color = randomColor,
+                            SpecularColor = randomColor
+                        };
+                        r._light.Add(l);
+                        r.runTimer = true;
+                        r.timer = 0;
+                    }
+                }
+                else
+                    canAddLight = true;
+
+                if (Keyboard.GetState().IsKeyDown(Key.Minus))
+                {
+                    r._light[r.selectedLight].Intensity -= 0.25f;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Key.V))
+                {
+                    if (canSelectLight)
+                    {
+                        canSelectLight = false;
+                        r.selectedLight = (r.selectedLight + 1) % r._light.Count;
+                    }
+                }
+                else
+                    canSelectLight = true;
+
 
                 if (Keyboard.GetState().IsKeyDown(Key.Z))
                     r._angleallowed = !r._angleallowed;
 
                 if (Keyboard.GetState().IsKeyDown(Key.X))
-                    r._light.Position = r.GetCamera.Position;
+                    r._light[r.selectedLight].Position = r.GetCamera.Position;
 
                 if (_firstMove) // This bool variable is initially set to true.
                 {

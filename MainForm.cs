@@ -92,10 +92,8 @@ namespace BNDL_Explorer
                             try
                             {
                                 IntPtr data = Marshal.UnsafeAddrOfPinnedArrayElement(image.Data, 0);
-
-                                pictureBoxDDS.Image = new Bitmap(image.Width, image.Height, image.Stride, format, data); ;
-                                pictureBoxDDS.SizeMode =
-                                    (image.Width > pictureBoxDDS.Width || image.Height > pictureBoxDDS.Height) ? PictureBoxSizeMode.Zoom : PictureBoxSizeMode.CenterImage;
+                                pictureBoxDDS.Image = new Bitmap(image.Width, image.Height, image.Stride, format, data);
+                                pictureBoxDDS.SizeMode = (image.Width > pictureBoxDDS.Width || image.Height > pictureBoxDDS.Height) ? PictureBoxSizeMode.Zoom : PictureBoxSizeMode.CenterImage;
                             }
                             finally
                             {
@@ -381,11 +379,20 @@ namespace BNDL_Explorer
 
         private void asdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            //FileData item = (FileData)TreeViewMain.SelectedNode.Tag;
+            //byte[] buffer = BNDLParser.ExtractFileToArray(item, 0);
+            Mesh mesh = new Mesh();
+
+            //mesh.LoadMesh(buffer);
+
+            mesh.BaryTest();
         }
 
         private void windowToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
+
+
             using (Renderer game = new Renderer(1280, 720, GraphicsMode.Default, "BNDLViewer 3D")) //"LearnOpenTK"))
             {
                 game.Run(100.0);

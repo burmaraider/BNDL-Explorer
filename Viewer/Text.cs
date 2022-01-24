@@ -21,7 +21,7 @@ namespace BNDL_Explorer.Viewer
         private List<int> _vertexBufferObject = new List<int>();
         private List<int> _vertexArrayObject = new List<int>();
         private List<int> _elementBufferObject = new List<int>();
-        private Shader _shader;
+        private Shader _shader = new Shader("Viewer/Shaders/screen.vert", "Viewer/Shaders/screen.frag");
         private Texture _texture;
         private NativeWindow _window;
 
@@ -69,7 +69,6 @@ namespace BNDL_Explorer.Viewer
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject[i]);
                 GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.DynamicDraw);
 
-                _shader = new Shader("Viewer/Shaders/screen.vert", "Viewer/Shaders/screen.frag");
                 _shader.Use();
 
                 var vertexLocation = _shader.GetAttribLocation("aPosition");
@@ -140,7 +139,6 @@ namespace BNDL_Explorer.Viewer
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject[i]);
                 GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.DynamicDraw);
 
-                _shader = new Shader("Viewer/Shaders/screen.vert", "Viewer/Shaders/screen.frag");
                 _shader.Use();
 
                 var vertexLocation = _shader.GetAttribLocation("aPosition");
