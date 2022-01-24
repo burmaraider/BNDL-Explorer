@@ -246,14 +246,15 @@ namespace BNDL_Explorer.Viewer
         /// </summary>
         private void DebugInfo()
         {
-            _textRenderer.DrawString(String.Format("Position: {0:0.000} , {1:0.000} , {2:0.000}", _camera.Position.X, _camera.Position.Y, _camera.Position.Z), 2f, 0f);
+            _textRenderer.DrawString(String.Format("Position: {0:0.000} , {1:0.000} , {2:0.000}", _camera.Position.X, _camera.Position.Y, _camera.Position.Z), 4f, 16f);
             _textRenderer.DrawString(String.Format("Camera FOV: {0:0}", _camera.Fov), 2f, 32f);
             _textRenderer.DrawString(String.Format("Camera Aspect Ratio: {0:0.00}", _camera.AspectRatio), 2f, 64f);
             _textRenderer.DrawString("Hold Right mouse to enter first person camera mode", 2f, Size.Height - 64f);
             _textRenderer.DrawString("Hold Middle mouse to rotate model", 2f, Size.Height - 96f);
             _textRenderer.DrawString("Press X to move light in first person mode", 2f, Size.Height - 128f);
-
+            
             _textRenderer.DrawString(String.Format("Selected Light: {0}", selectedLight), 400f, 64f);
+            //_textRenderer.CreateVAO("THIS TEST 1 2 3 4 5 6 7 8");
 
             float time = timer / 100f;
             if (timer / 100f < 1)
@@ -295,7 +296,7 @@ namespace BNDL_Explorer.Viewer
             GL.Viewport(0, 0, Size.Width, Size.Height);
 
             _camera.AspectRatio = (Size.Width / (float)Size.Height);
-            _textRenderer.Reset();
+            //_textRenderer.Reset();
         }
     }
 }
