@@ -5,6 +5,7 @@ struct Material {
     sampler2D tSpecularMap;
     sampler2D tNormalMap;
     float     fMaxtSpecularMapPower;
+    int blinn;
 };
 struct Light {
     vec3 position;
@@ -26,20 +27,21 @@ in VS_OUT
     vec3 Normal;
     vec3 FragPos;
     vec2 TexCoords;
-    //vec3 LightDirTangent;
-    //vec3 EyeDirTangent;
     mat3 TBN;
 } fs_in;
 
 out vec4 FragColor;
 
+vec3 tDiffuseMap = texture(material.tDiffuseMap, fs_in.TexCoords).rgb;
+vec4 tSpecularMap = texture(material.tSpecularMap, fs_in.TexCoords).rgba;
+vec3 tNormalMap = texture(material.tNormalMap, fs_in.TexCoords).rgb;
+
 vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
-// Ambient
-    vec3 ambient = light[0].ambient * vec3(texture(material.tDiffuseMap, fs_in.TexCoords));
-
+    // Ambient
+    vec3 ambient = light[0].ambient * tDiffuseMap;
     vec3 norm = normalize(fs_in.Normal);
     vec3 viewDir = fs_in.TBN * normalize(viewPos - fs_in.FragPos);
     vec3 result = vec3(0);
@@ -59,18 +61,27 @@ vec3 CalcPointLight(Light light, vec3 normalIn, vec3 fragPos, vec3 viewDir)
     float diff = max(dot(normalIn, lightDir2), 0.0);
     float dist = distance(light.position, fs_in.FragPos);
     float att = clamp(1.0 - dist*dist/(light.radius*light.radius), 0.0, 1.0);
-    vec3 diffuse = light.diffuse * att * diff * vec3(texture(material.tDiffuseMap, fs_in.TexCoords));
-
+    vec3 diffuse = light.diffuse * att * diff * tDiffuseMap;
     //Normal map
-    vec3 normal = texture(material.tNormalMap, fs_in.TexCoords).rgb;
-    normal = normal * 2.0 - 1.0;   
+    vec3 normal = tNormalMap * 2.0 - 1.0;   
 
-    // Specular
-    vec3 reflectDir = reflect(-lightDir, normal);
-    vec3 halfwayDir = normalize(viewDir + reflectDir);  
-    float spec = pow(max(dot(halfwayDir, viewDir), 0.0), material.fMaxtSpecularMapPower);
-    vec3 specular = light.specular * (att * 0.5 )* spec * vec3(texture(material.tSpecularMap, fs_in.TexCoords));
-
+    vec3 specular = vec3(0);
+    if(material.blinn == 1)
+    {
+        // Specular - Blinn-Phong
+        vec3 reflectDir = reflect(-lightDir, normal);
+        vec3 halfwayDir = normalize(viewDir + lightDir);  
+        float spec = pow(max(dot(normal, halfwayDir), 0.0), material.fMaxtSpecularMapPower);
+        specular = (light.specular * 0.5) * (att * tSpecularMap.a ) * spec * tSpecularMap.rgb;
+    }
+    else
+    {
+        // Specular
+        vec3 reflectDir = reflect(-lightDir, normal);
+        vec3 halfwayDir = normalize(viewDir + reflectDir);  
+        float spec = pow(max(dot(halfwayDir, viewDir), 0.0), material.fMaxtSpecularMapPower);
+        specular = light.specular * (att * tSpecularMap.a * 1.5 )* spec * tSpecularMap.rgb;
+    }
     //Final output
     vec3 result = diffuse + specular;
 

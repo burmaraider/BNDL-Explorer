@@ -301,6 +301,7 @@
     <Compile Include="Viewer\Camera.cs" />
     <Compile Include="Viewer\Input.cs" />
     <Compile Include="Viewer\Light.cs" />
+    <Compile Include="Viewer\Material.cs" />
     <Compile Include="Viewer\PointLight.cs" />
     <Compile Include="Viewer\MeshObject.cs" />
     <Compile Include="Viewer\OBJImporter.cs" />
@@ -308,22 +309,22 @@
     <Compile Include="Viewer\Text.cs" />
     <Compile Include="Viewer\Texture.cs" />
     <Compile Include="Viewer\Renderer.cs" />
-    <Content Include="Viewer\Textures\flat_normal_map.png">
+    <Content Include="Viewer\Textures\flat_gray.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Viewer\Textures\Grid_D.png">
+    <Content Include="Viewer\Textures\flat_normal_map.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Viewer\Textures\Grid_S.png">
+    <Content Include="Viewer\Textures\Grid_D.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Viewer\Textures\gund.png">
+    <Content Include="Viewer\Textures\gund.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Viewer\Textures\gunn.png">
+    <Content Include="Viewer\Textures\gunn.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Viewer\Textures\guns.png">
+    <Content Include="Viewer\Textures\guns.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="AskForm.resx">
@@ -350,7 +351,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <Content Include="Viewer\gun.obj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
@@ -382,6 +383,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Viewer\data.bin" />
+    <Content Include="Viewer\docks.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -397,11 +401,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Viewer\Textures\awesomeface.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

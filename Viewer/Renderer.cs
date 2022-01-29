@@ -61,14 +61,17 @@ namespace BNDL_Explorer.Viewer
 
             // 4D world coordinates
             var rayWorldCoordinates = (_camera.LookAtMatrix.Inverted() * rayEye).Xyz;
-            rayWorldCoordinates.Normalize();
+            //rayWorldCoordinates.Normalize();
             FindClosestObject(rayWorldCoordinates);
         }
 
         private void FindClosestObject(Vector3 rayWorldCoordinates)
         {
+
             double? bestDistance = null;
             MeshObject bestCandidate = null;
+
+            _meshList[_meshList.Count - 1]._position = rayWorldCoordinates;
 
             foreach (MeshObject meshObject in _meshList)
             {
@@ -113,22 +116,32 @@ namespace BNDL_Explorer.Viewer
             PrepareVBO(out vbo, result);
 
             //Add our models so that we can render them
-            _meshList.Add(new MeshObject(vbo, "Viewer/Textures/gund.png", "Viewer/Textures/guns.png", "Viewer/Textures/gunn.png", ref _camera));
+            _meshList.Add(new MeshObject(vbo, "gund", "guns", "gunn", ref _camera));
             _meshList[_meshList.Count - 1]._name = "GUN";
+            _meshList[_meshList.Count - 1].Material.Shading = Material.ShadingType.phong;
+            _meshList[_meshList.Count - 1].Material.SpecularPower = 16f;
 
+            result = FileFormatObj.Load("Viewer/docks.obj", false);
+            PrepareVBO(out vbo, result);
+            _meshList.Add(new MeshObject(vbo, ref _camera));
+            _meshList[_meshList.Count - 1]._name = "LEVEL";
+            _meshList[_meshList.Count - 1].Material.Shading = Material.ShadingType.blinn;
+
+            _meshList.Add(_meshList[0]);
+            _meshList[_meshList.Count - 1]._position = Vector3.One;
+            _meshList[_meshList.Count - 1]._name = "RAY";
 
             //We can access our light here and change all the settings
             _light.Add(new PointLight());
             _light.Add(new PointLight());
             _light[_light.Count - 1].Position = new Vector3(_light[_light.Count - 2].Position.X - -2f);
             _light[0].Color = new Vector3(0.2f, 0.2f, 1.0f);
-            _light[0].SpecularColor = new Vector3(0.3f, 0.3f, 0.5f);
+            _light[0].SpecularColor = new Vector3(0.2f, 0.2f, 1.0f);
             _light[0].AmbientColor = new Vector3(0.0f);
             _light[0].Intensity = 1.5f;
             GLInit();
             base.OnLoad(e);
         }
-
 
         private static void GLInit()
         {
@@ -146,7 +159,7 @@ namespace BNDL_Explorer.Viewer
             /// </summary>
             /// <param name="vbo">The list containing all the VBO float values</param>
             /// <param name="result">OBJ data to parse</param>
-            private static void PrepareVBO(out byte[] vbo, FileLoadResult<FileFormatWavefront.Model.Scene> result)
+        private static void PrepareVBO(out byte[] vbo, FileLoadResult<FileFormatWavefront.Model.Scene> result)
         {
             MemoryStream ms = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(ms);
@@ -230,11 +243,21 @@ namespace BNDL_Explorer.Viewer
             foreach (MeshObject mesh in _meshList)
             {
                 var transform = Matrix4.Identity;
-                transform *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(_xAngle)); //rotate
-                transform *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_yAngle)); //rotate
+                
                 transform = transform * Matrix4.CreateScale(1.0f); // scale
-                transform *= Matrix4.CreateTranslation(i * 2, 0.0f, 0.0f); //move each model to the right just a bit
-                mesh._position = transform.ExtractTranslation();//set our objects position
+                // //move each model to the right just a bit
+                if(mesh._name == "GUN")
+                {
+                    transform *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(_xAngle)); //rotate
+                    transform *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_yAngle)); //rotate
+                    transform = transform * Matrix4.CreateScale(0.5f); // scale
+                    transform *= Matrix4.CreateTranslation(-5.241f, 4.175f, -12.711f);
+                }
+                if (mesh._name == "RAY")
+                {
+                    transform *= Matrix4.CreateTranslation(mesh._position);
+                }
+                //mesh._position = transform.ExtractTranslation();//set our objects position
 
                 mesh.RenderObject(transform, ref _light);
                 i++;
@@ -247,22 +270,38 @@ namespace BNDL_Explorer.Viewer
         private void DebugInfo()
         {
             _textRenderer.DrawString(String.Format("Position: {0:0.000} , {1:0.000} , {2:0.000}", _camera.Position.X, _camera.Position.Y, _camera.Position.Z), 4f, 16f);
-            _textRenderer.DrawString(String.Format("Camera FOV: {0:0}", _camera.Fov), 2f, 32f);
-            _textRenderer.DrawString(String.Format("Camera Aspect Ratio: {0:0.00}", _camera.AspectRatio), 2f, 64f);
-            _textRenderer.DrawString("Hold Right mouse to enter first person camera mode", 2f, Size.Height - 64f);
-            _textRenderer.DrawString("Hold Middle mouse to rotate model", 2f, Size.Height - 96f);
-            _textRenderer.DrawString("Press X to move light in first person mode", 2f, Size.Height - 128f);
+            _textRenderer.DrawString(String.Format("Camera FOV: {0:0}", _camera.Fov), 4f, 32f);
+            _textRenderer.DrawString(String.Format("Camera Aspect Ratio: {0:0.00}", _camera.AspectRatio), 4f, 64f);
+            _textRenderer.DrawString("Hold Right mouse to enter first person camera mode", 4f, Size.Height - 64f);
+            _textRenderer.DrawString("Hold Middle mouse to rotate model", 4f, Size.Height - 96f);
+            _textRenderer.DrawString("Press X to move light in first person mode", 4f, Size.Height - 128f);
+
+            //Current selected light
+            var sLightString = String.Format("Selected Light: {0}", selectedLight);
+            var offsetFromRight = sLightString.Length * (_textRenderer.cWidth + 1f);
+            _textRenderer.DrawString(sLightString, Size.Width - offsetFromRight , Size.Height - 128f);
             
-            _textRenderer.DrawString(String.Format("Selected Light: {0}", selectedLight), 400f, 64f);
-            //_textRenderer.CreateVAO("THIS TEST 1 2 3 4 5 6 7 8");
+            sLightString = String.Format("Position: {0:0.000} , {1:0.000} , {2:0.000}",
+                _light[selectedLight].Position.X,
+                _light[selectedLight].Position.Y,
+                _light[selectedLight].Position.Z);
+            offsetFromRight = sLightString.Length * (_textRenderer.cWidth + 0.5f);
+            _textRenderer.DrawString(sLightString, Size.Width - offsetFromRight, Size.Height - 108f);
+
+            sLightString = String.Format("Color: {0} , {1} , {2}",
+                Math.Round(_light[selectedLight].Color.X * 255f, MidpointRounding.AwayFromZero),
+                Math.Round(_light[selectedLight].Color.Y * 255f, MidpointRounding.AwayFromZero),
+                Math.Round(_light[selectedLight].Color.Z * 255f, MidpointRounding.AwayFromZero));
+            offsetFromRight = sLightString.Length * (_textRenderer.cWidth + 1f);
+            _textRenderer.DrawString(sLightString, Size.Width - offsetFromRight, Size.Height - 88f);
 
             float time = timer / 100f;
-            if (timer / 100f < 1)
+            if (time < 1.5f && time > 0.0f)
             {
-                _textRenderer.DrawString(String.Format("Added new light: {0}", _light.Count + 1), 400f, 86f);
+                _textRenderer.DrawString(String.Format("Added new light: {0}", _light.Count + 1), 400f, 86f, 2.0f);
             }
 
-            _textRenderer.DrawString(String.Format("Timer: {0:0.00}", time), 400f, 102f);
+            //_textRenderer.DrawString(String.Format("Timer: {0:0.00}", time), 400f, 102f);
 
         }
 
@@ -271,13 +310,10 @@ namespace BNDL_Explorer.Viewer
             base.OnUpdateFrame(e);
             _input.ProcessControls(ref e);
 
-            //update ingame timer
             if (runTimer)
-            {
                 timer++;
-            }
 
-            if(_angleallowed)
+            //if(_angleallowed)
                 _xAngle += 0.2f;
             //todo: depth sorting
             

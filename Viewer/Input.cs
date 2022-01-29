@@ -142,13 +142,7 @@ namespace BNDL_Explorer.Viewer
                     r.GetCamera.Pitch -= deltaY * _mouseSensitivity;
                 }
             }
-            else
-            {
-                r.CursorGrabbed = false;
-                r.CursorVisible = true;
-            }
-
-            if (Mouse.GetState().IsButtonDown(MouseButton.Middle)) //Enable Viewport Interaction
+            else if (Mouse.GetState().IsButtonDown(MouseButton.Middle)) //Enable Viewport Interaction
             {
                 r.CursorGrabbed = true;
                 r.CursorVisible = false;

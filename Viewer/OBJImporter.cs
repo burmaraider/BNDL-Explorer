@@ -138,5 +138,18 @@ namespace BNDL_Explorer.Viewer
             return vboData.ToArray();
         }
 
+        public uint[] GetEBO()
+        {
+            List<uint> list = new List<uint>();
+
+            foreach (var item in faceList)
+            {
+                list.Add((uint)item.f1-1);
+                list.Add((uint)item.f2-1);
+                list.Add((uint)item.f3-1);
+            }
+            return list.ToArray();
+        }
+
     }
 }
